@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% block content %}
+
+
+<h1 style="text-align: center; padding: 20px 0 20px 0;">Welcome to Hoo Hunts!</h1>
+
+
+<div class="homeButtonContainer" style="margin: 20px 0 0 0; padding: 100px 0 0 0;">
+    
+    <form method="post" action="{% url 'choose_hunt' %}">
+        {% csrf_token %}
+        <button class="btn btn-primary rounded-pill" style="padding: 20px 40px 20px 40px; margin:10px 20px 10px 20px;">Choose Hunt</button>
+    </form>
+    <form method="post" action="{% url 'create' %}">
+        {% csrf_token %}
+        <button class="btn btn-primary rounded-pill" style="padding: 20px 40px 20px 40px; margin:10px 20px 10px 20px;">Create Hunt</button>
+    </form>
+    
+
+</div>
+
+
+
+{% endblock %}

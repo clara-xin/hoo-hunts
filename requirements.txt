@@ -1,0 +1,6 @@
+gunicorn
+django-heroku
+Django
+dj-database-url
+django-allauth
+psycopg2-binary

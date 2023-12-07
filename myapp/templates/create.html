@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid text-center">
+    <h1 style="font-size: 20px;"> Create your own hunt!</h1>
+    <form method="post" onsubmit="return validateLocation()">
+        {% csrf_token %}
+        {{ form.as_p }}
+        {% include "submit_map.html" %}
+        <input type="hidden" id="latitudeInput" name="latitude" value="" required>
+        <input type="hidden" id="longitudeInput" name="longitude" value="" required>
+        <button type="submit" class="btn btn-success">Submit</button>
+    </form>
+    {% if messages %}
+    <ul class="messages">
+        {% for message in messages %}
+            <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+</div>
+
+<script>
+    function validateLocation() {
+        const latitude = document.getElementById("latitudeInput").value;
+        const longitude = document.getElementById("longitudeInput").value;
+
+        if (latitude === "" || longitude === "") {
+            alert("Please mark a location on the map before submitting.");
+            return false;  // Prevent form submission
+        }
+
+        return true;  // Allow form submission
+    }
+</script>
+
+{% endblock %}

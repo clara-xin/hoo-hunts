@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!DOCTYPE html>
+
+<script>
+  
+  function func(){
+      document.getElementById("acq_id").innerHTML = "Acquiring"
+      getLocation()
+  }
+
+
+  function getLocation() {
+  if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(showPosition);
+  } else {
+      document.getElementById("dist_Elem").innerHTML = "Geolocation is not supported by this browser.";
+  }
+  }
+
+  function showPosition(position) {
+
+    //Get Position
+    lat1 = position.coords.latitude;
+    long1 = position.coords.longitude;
+
+    lat2 = parseFloat(document.getElementById("clue_lat").innerHTML)
+    long2 = parseFloat(document.getElementById("clue_long").innerHTML)
+
+    lar1 = lat1*Math.PI/180
+    lor1 = long1*Math.PI/180
+    lar2 = lat2*Math.PI/180
+    lor2 = long2*Math.PI/180
+
+    last_lat1 = parseInt(document.getElementById("your_last_lat").innerHTML)
+    last_long1 = parseInt(document.getElementById("your_last_long").innerHTML)
+
+    //Get points: This should be stored elsewhere and handled differently, this is temporary demo
+    pts = parseInt(document.getElementById("track_pts_off").innerHTML)
+
+    if (last_lat1 == 0 && last_long1 && pts == 0) {
+      parseInt(document.getElementById("your_last_lat").innerHTML) = last_lat1
+      parseInt(document.getElementById("your_last_long").innerHTML) = last_long1
+    }
+
+    //document.getElementById("clue_long").innerHTML = y2
+    //document.getElementById("clue_lat").innerHTML = x2
+
+    //Points
+    if (last_long1 != long1 && last_lat1 != lat1) {
+      pts = pts + 5
+      document.getElementById("track_pts_off").innerHTML = pts
+    }
+
+    //Distance
+    d = Math.acos( (Math.sin(lar1)*Math.sin(lar2)) + Math.cos(lar1)*Math.cos(lar2)*Math.cos(lor2-lor1) )*6371*1000
+    d = Math.round(d*100)/100.0
+
+    if (Math.abs(d) <= 10) {
+      document.getElementById("dist_Elem").innerHTML = "You won! You're very close to the hunt's location.";
+    } else {
+      document.getElementById("dist_Elem").innerHTML = "Meters Away= " + d;
+    }
+
+    document.getElementById("acq_id").innerHTML = "Done";
+
+  }
+
+  function h_pts() {
+    pts = parseInt(document.getElementById("track_pts_off").innerHTML) + 10
+    document.getElementById("track_pts_off").innerHTML = pts
+  }      
+  
+</script>
+
+<html>
+  <head>
+    <title>Simple Map</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+
+    <link rel="stylesheet" type="text/css" href="/static/style.css" />
+    <script type="module" src="/static/map.js"></script>
+  </head>
+  <body>
+    <div id="map"style="width: 100%; height: 400px;"></div>
+
+    <!-- prettier-ignore -->
+    <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})
+        ({key: "AIzaSyD8IGUlFrBzo6EnmJg7vynhmD62PeSomy8", v: "weekly"});</script>
+  </body>
+  
+    <button type="button" class="btn btn-primary" onclick=func()>Check My Location</button>
+    <p id="acq_id"></p>
+
+    <p id="clue_long" style="display:none">{{o_lon}}</p>
+    <p id="clue_lat" style="display:none">{{o_lat}}</p>
+    <p id="your_last_long" style="display:none">0</p>
+    <p id="your_last_lat" style="display:none">0</p>
+    <p id="track_pts_off"style="display:none">0</p>
+
+    <p id="dist_Elem"></p>
+
+    <div class="container">
+      <div class="row">
+        <div class="col-12 text-center">
+          {% for hunt in active_hunt %}
+            {% if hunt.is_active %}
+              <h1>{{ hunt.clue_text }}</h1>
+              Stuck?
+              <!-- <p>{{ hunt.hint_text }}</p> -->
+              <button type="button" class="btn btn-primary" data-toggle="modal" data-hunt-id="{{ hunt.id }}" data-target="#exampleModal" onclick=h_pts()>
+                Reveal Hint
+            </button>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+          <div class="modal-content">
+              <!-- Add modal content here -->
+              <div class="modal-header">
+                  <h5 class="modal-title" class="col-12 text-center" id="exampleModalLabel">HINT</h5>
+              </div>
+              <div class="modal-body">
+                  <!-- Loop through active_hunt to find the correct hint -->
+                  {% for hunt in active_hunt %}
+                      {% if hunt.is_active %}
+                          <p>{{ hunt.hint_text }}</p>
+                      {% endif %}
+                  {% endfor %}
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                  <!-- Add additional buttons if needed -->
+              </div>
+          </div>
+      </div>
+  </div>
+</html>
+
+
+{% endblock %}

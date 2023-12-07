@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container-fluid text-center">
+    <h1 style="font-size: 20px;">Pending Submissions</h1>
+    <ul>
+       
+        {% for submission in submissions %}
+            {% if submission.submitted_by == user and submission.was_verified == submission.PENDING  %}
+                <li class="row" style="border: 1px solid black; padding: 10px 0px 10px 5px; margin: 5px 10px 0 0; background-color: rgb(221, 246, 249);">
+                    <div class="col-2">
+                        <h2 style="margin: 15px 0 15px 0;">{{ submission.title }}</h2>
+                    </div>
+                        <p>Location: {{ submission.location }}</p>
+                        <p>Clue: {{ submission.clue_text }}</p>
+                        <p>Hint: {{ submission.hint_text }}</p>
+                        <p>Latitude: {{ submission.latitude }}</p>
+                        <p>Longitude: {{ submission.longitude }}</p>
+                    <div class="col-2">
+                        <p style="margin: 20px 0 0 0;">Created by: {{ submission.created_by }}</p>
+                    </div>
+                    <div class="col-8" style="align-content: end">
+                    </div>
+                </li>
+            {% endif %}
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

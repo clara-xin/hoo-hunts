@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    {% block title %}{{ section.title }}{% endblock %}
+
+    <style>
+        .homeButtonContainer{
+            display: flex;
+            flex-wrap: wrap;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-around;
+        }
+        body {
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .flex-grow-1 {
+            flex: 1;
+        }
+
+    </style>
+
+
+</head>
+
+<body class="d-flex flex-column" style="background-color: rgb(169, 234, 169);">
+    {% load socialaccount %}
+
+    <header>
+        <div class="container-fluid">
+            <div class="row" style="padding: 10px 10px 10px 10px; background-color: #04AF70; border-bottom: 2px solid black;">
+                <div class="col-md-1">
+                    <span class="dropdown">
+                        <button class="btn dropdown-toggle" style="background-color: #027148; color:white;"
+                            type="button" data-toggle="dropdown">Menu</button>
+                        <ul class="dropdown-menu">
+                            <li><a href="{% url 'home' %}">Home</a></li>
+                            <li><a href="{% url 'create' %}">Create Hunt</a></li>
+                            <li><a href="{% url 'choose_hunt' %}">Choose Hunt</a></li>
+                            {% with adminEmails='rym4hc@virginia.edu rfa4px@virginia.edu vvb6ab@virginia.edu rmg5nj@virginia.edu mec2mq@virginia.edu cs3240.super@gmail.com t89754621@gmail.com' %}
+                            {% for em in adminEmails.split %}
+                            {% if user.email == em %}
+                            <li><a href="{% url 'view_submissions' %}">View Submissions</a></li>
+                            {% endif %}
+                            {% endfor %}
+                            {% endwith %}
+                        </ul>
+                    </span>
+                </div>
+                <div class="col-md-6" style="text-align: middle">
+                    <p style="font-size: 16pt; font-weight: bold;">Hoo Hunts</p>
+                </div>
+                {% if user.is_authenticated %}
+                <div class="col-md-2" style="text-align: end;">
+                    {% with adminEmails='rym4hc@virginia.edu rfa4px@virginia.edu vvb6ab@virginia.edu rmg5nj@virginia.edu mec2mq@virginia.edu cs3240.super@gmail.com t89754621@gmail.com' %}
+                
+                    {% for em in adminEmails.split %}
+                    {% if user.email == em %}
+                    <p style="font-size: 16pt; font-weight: bold;">ADMIN</p>
+                    {% endif %}
+                    {% endfor %}
+                
+                    {% endwith %}
+                </div>
+                
+                <div class="col-md-2 text-end" style="font-size: 12pt;">
+                    <p>Welcome, {{ user.username }}!</p>
+                </div>
+                <div class="flex-shrink-0 dropdown col-md-1">
+                    <a href="#" class="d-block link-body-emphasis text-decoration-none dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                        <img src="https://laiacc.com/wp-content/uploads/2019/03/blank-profile-picture-973460_1280-705x705.png" alt="mdo" width="32" height="32" class="rounded-circle">
+                    </a>
+                    <ul class="dropdown-menu text-small shadow">
+                        <li><a class="dropdown-item" href="{% url 'profile' %}">Profile</a></li>
+                        <li><a class="dropdown-item" href="{% url 'personal_hunts' %}">Personal Hunts</a></li>
+                        <li>
+                            <hr class="dropdown-divider">
+                        </li>
+                        <li><a class="dropdown-item" href="{% url 'logout' %}">Sign out</a></li>
+                    </ul>
+                </div>
+                {% else %}
+                <div class="col-md-1 text-end">
+                    <a href="{% provider_login_url 'google' %}" class="btn btn-outline-primary me-2">Login</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+    
+    <div class="flex-grow-1">
+
+    {% block content %}
+    {% endblock %}
+
+    </div>
+
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL"
+        crossorigin="anonymous"></script>
+
+    
+            <footer class="footer mt-auto py-3" style="background-color: #04AF70">
+                <div class="container">
+                  <span class="text-muted">Created for CS 3240, 2023.</span>
+                </div>
+              </footer>
+
+      
+</body>
+
+
+
+    
+</html>

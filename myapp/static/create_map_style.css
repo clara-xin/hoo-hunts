@@ -1,0 +1,10 @@
+#map-container {
+    width: 50%; /* Adjust the width as needed */
+    margin: 0 auto; /* Center the map horizontally */
+    height: 400px;
+}
+
+#map {
+    width: 50%; /* Make the map fill the entire width of the container */
+    height: 100%; /* Make the map fill the entire height of the container */
+}
